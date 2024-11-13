@@ -13,16 +13,16 @@ inputs:
     required: true
     default: 'quiet'
   downloadBuildArtifactName:
-    description: The name of the downloaded build artifact. Default is NuGet-${{ inputs.configuration }}.
+    description: The name of the downloaded build artifact. Default, when left empty, is 'format('NuGet-{0}', inputs.configuration)'.
     required: false
-    default: 'NuGet-${{ inputs.configuration }}'
+    default: ''
 runs:
   using: composite
   steps:
     - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
-        name: ${{ inputs.downloadBuildArtifactName }}
+        name: ${{ inputs.downloadBuildArtifactName != '' && inputs.downloadBuildArtifactName || format('NuGet-{0}', inputs.configuration) }}
 
     - name: Display structure of downloaded files
       run: |
