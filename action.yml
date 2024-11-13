@@ -12,13 +12,17 @@ inputs:
     description: Sets the verbosity level of the command. Allowed values are quiet, normal and detailed. The default is quiet.
     required: true
     default: 'quiet'
+  downloadBuildArtifactName:
+    description: The name of the downloaded build artifact. Default is NuGet-${{ inputs.configuration }}.
+    required: false
+    default: 'NuGet-${{ inputs.configuration }}'
 runs:
   using: composite
   steps:
     - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
-        name: NuGet-${{ inputs.configuration }}
+        name: ${{ inputs.downloadBuildArtifactName }}
 
     - name: Display structure of downloaded files
       run: |

@@ -32,6 +32,8 @@ with:
   # Sets the verbosity level of the command. 
   # Allowed values are quiet, normal and detailed.
   level: 'quiet'
+  # The name of the downloaded build artifact.
+  downloadBuildArtifactName: 'NuGet-${{ inputs.configuration }}'
 ```
 
 ### Outputs
