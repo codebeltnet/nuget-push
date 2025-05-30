@@ -1,43 +1,19 @@
-name: NuGet Push
+name: NuGet Push from Codebelt
 description: An opinionated action that downloads existing NuGet packages and pushes them to a package source and publishes them.
 inputs:
-  token:
-    description: The NuGet API key.
-    required: true
-  configuration:
-    description: Defines the build configuration. Default is Release.
-    required: true
-    default: 'Release'
-  level:
+  source:
+    description: The NuGet source to push the packages to. Default is https://api.nuget.org/v3/index.json.
+    required: false
+    default: 'https://api.nuget.org/v3/index.json'
+  verbosity-level:
     description: Sets the verbosity level of the command. Allowed values are quiet, normal and detailed. The default is quiet.
     required: true
     default: 'quiet'
-  downloadBuildArtifactName:
-    description: The name of the downloaded build artifact. Default, when left empty, is 'format('NuGet-{0}', inputs.configuration)'.
-    required: false
-    default: ''
 runs:
   using: composite
   steps:
-    - name: Download all artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: ${{ inputs.downloadBuildArtifactName != '' && inputs.downloadBuildArtifactName || format('NuGet-{0}', inputs.configuration) }}
-
-    - name: Display structure of downloaded files
-      run: |
-        pwd
-        ls -R
-      shell: bash
-
-    - name: NuGet
-      uses: nuget/setup-nuget@v2
-      with:
-        nuget-version: latest
-        nuget-api-key: ${{ inputs.token }}
-
     - name: Push
-      run: nuget push '${{ github.workspace }}/*.nupkg' -Source https://api.nuget.org/v3/index.json -SkipDuplicate -Verbosity ${{ inputs.level }}
+      run: nuget push '${{ github.workspace }}/*.nupkg' -Source ${{ inputs.source }} -SkipDuplicate -Verbosity ${{ inputs.verbosity-level }}
       shell: bash
 branding:
   icon: 'umbrella'
